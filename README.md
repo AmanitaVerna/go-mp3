@@ -2,7 +2,7 @@
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/amanitaverna/go-mp3.svg)](https://pkg.go.dev/github.com/amanitaverna/go-mp3)
 
-The original go-mp3 is no longer maintained. This fork was made to add the ability to record the current position for later seeking, and for seeking forwards and backwards by a certain number of seconds.
+The original go-mp3 is no longer maintained. This fork was made to add the ability to record the current position for later seeking, and for seeking forwards and backwards by a certain number of seconds, and seeking to a specific time code in the mp3.
 
 # The original readme follows:
 
