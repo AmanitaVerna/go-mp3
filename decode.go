@@ -77,12 +77,12 @@ func (d *Decoder) At() (ret int64) {
 }
 
 // Rewind rewinds by the specified number of seconds (or less if that would take us to the beginning of the mp3).
-func (d *Decoder) Rewind(seconds int64) {
+func (d *Decoder) Rewind(seconds int) {
 	// TODO
 }
 
 // Skip skips forward by the specified number of seconds (or less if that would take us to the end of the mp3).
-func (d *Decoder) Skip(seconds int64) {
+func (d *Decoder) Skip(seconds int) {
 	// TODO
 }
 
