@@ -1,8 +1,10 @@
-# This project is no longer maintained.
-
 # go-mp3
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/hajimehoshi/go-mp3.svg)](https://pkg.go.dev/github.com/hajimehoshi/go-mp3) 
+[![Go Reference](https://pkg.go.dev/badge/github.com/amanitaverna/go-mp3.svg)](https://pkg.go.dev/github.com/amanitaverna/go-mp3)
+
+The original go-mp3 is no longer maintained. This fork was made to add the ability to record the current position for later seeking, and for seeking forwards and backwards by a certain number of seconds.
+
+# The original readme follows:
 
 An MP3 decoder in pure Go based on [PDMP3](https://github.com/technosaurus/PDMP3).
 

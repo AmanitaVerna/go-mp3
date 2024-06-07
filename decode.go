@@ -17,6 +17,7 @@ package mp3
 import (
 	"errors"
 	"io"
+	"time"
 
 	"github.com/amanitaverna/go-mp3/internal/consts"
 	"github.com/amanitaverna/go-mp3/internal/frame"
@@ -65,6 +66,35 @@ func (d *Decoder) Read(buf []byte) (int, error) {
 	d.buf = d.buf[n:]
 	d.pos += int64(n)
 	return n, nil
+}
+
+// At returns the current position, which can be used with Seek with whence = io.SeekOrigin.
+// The purpose of this function is to enable saving the current position.
+//
+// E.G. d.Seek(d.At(), io.SeekOrigin), which would not change the current position at all.
+func (d *Decoder) At() (ret int64) {
+	return d.pos
+}
+
+// Rewind rewinds by the specified number of seconds (or less if that would take us to the beginning of the mp3).
+func (d *Decoder) Rewind(seconds int64) {
+	// TODO
+}
+
+// Skip skips forward by the specified number of seconds (or less if that would take us to the end of the mp3).
+func (d *Decoder) Skip(seconds int64) {
+	// TODO
+}
+
+// AtTime returns the current position in the mp3 in terms of time, which can be used with SeekTime.
+func (d *Decoder) AtTime() (ret time.Duration) {
+	// TODO
+	return
+}
+
+// SeekTime seeks to a specific time in the mp3.
+func (d *Decoder) SeekTime(at time.Duration) {
+	// TODO
 }
 
 // Seek is io.Seeker's Seek.
