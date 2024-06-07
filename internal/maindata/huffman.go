@@ -17,11 +17,11 @@ package maindata
 import (
 	"fmt"
 
-	"github.com/hajimehoshi/go-mp3/internal/bits"
-	"github.com/hajimehoshi/go-mp3/internal/consts"
-	"github.com/hajimehoshi/go-mp3/internal/frameheader"
-	"github.com/hajimehoshi/go-mp3/internal/huffman"
-	"github.com/hajimehoshi/go-mp3/internal/sideinfo"
+	"github.com/amanitaverna/go-mp3/internal/bits"
+	"github.com/amanitaverna/go-mp3/internal/consts"
+	"github.com/amanitaverna/go-mp3/internal/frameheader"
+	"github.com/amanitaverna/go-mp3/internal/huffman"
+	"github.com/amanitaverna/go-mp3/internal/sideinfo"
 )
 
 func readHuffman(m *bits.Bits, header frameheader.FrameHeader, sideInfo *sideinfo.SideInfo, mainData *MainData, part_2_start, gr, ch int) error {
