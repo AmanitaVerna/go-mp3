@@ -234,7 +234,7 @@ func Read(source FullReader, position int64) (h FrameHeader, startPosition int64
 				// Expected EOF
 				return 0, 0, io.EOF
 			}
-			return 0, 0, &consts.UnexpectedEOF{"readHeader (1)"}
+			return 0, 0, &consts.UnexpectedEOF{At: "readHeader (1)"}
 		}
 		return 0, 0, err
 	}
@@ -252,7 +252,7 @@ func Read(source FullReader, position int64) (h FrameHeader, startPosition int64
 		buf := make([]byte, 1)
 		if _, err := source.ReadFull(buf); err != nil {
 			if err == io.EOF {
-				return 0, 0, &consts.UnexpectedEOF{"readHeader (2)"}
+				return 0, 0, &consts.UnexpectedEOF{At: "readHeader (2)"}
 			}
 			return 0, 0, err
 		}
