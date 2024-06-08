@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"time"
 
 	"github.com/amanitaverna/go-mp3/internal/bits"
 	"github.com/amanitaverna/go-mp3/internal/consts"
@@ -113,6 +114,16 @@ func Read(source FullReader, position int64, prev *Frame) (frame *Frame, startPo
 
 func (f *Frame) SamplingFrequency() (int, error) {
 	return f.header.SamplingFrequencyValue()
+}
+
+// Duration returns the duration of the frame
+func (f *Frame) Duration() (ret time.Duration) {
+	return f.header.Duration()
+}
+
+// BytesPerSecond returns the number of bytes per second in the frame.
+func (f *Frame) BytesPerSecond() int {
+	return f.header.BytesPerSecond()
 }
 
 func (f *Frame) Decode() []byte {

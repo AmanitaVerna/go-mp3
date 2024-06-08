@@ -18,6 +18,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"time"
 
 	"github.com/amanitaverna/go-mp3/internal/consts"
 )
@@ -60,6 +61,22 @@ func (f FrameHeader) SamplingFrequencyValue() (int, error) {
 		return 32000 >> uint(f.LowSamplingFrequency()), nil
 	}
 	return 0, errors.New("mp3: frame header has invalid sample frequency")
+}
+
+// Duration returns the duration of the frame
+func (f FrameHeader) Duration() (ret time.Duration) {
+	var s int
+	s, _ = f.SamplingFrequencyValue()
+	ms := 1000.0 / float64(s) * float64(consts.SamplesPerGr*f.Granules())
+	ret = time.Duration(float64(time.Millisecond) * ms)
+	return
+}
+
+// BytesPerSecond returns the number of bytes per second in the frame.
+func (f FrameHeader) BytesPerSecond() int {
+	s, _ := f.SamplingFrequencyValue()
+	return 4 * s
+	// return f.BytesPerFrame() / int(f.Duration().Seconds())
 }
 
 // PaddingBit returns the padding bit stored in position 9

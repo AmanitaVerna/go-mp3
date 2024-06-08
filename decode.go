@@ -36,6 +36,7 @@ type Decoder struct {
 	frame         *frame.Frame
 	pos           int64
 	bytesPerFrame int64
+	timePos       time.Duration
 }
 
 func (d *Decoder) readFrame() error {
@@ -65,7 +66,18 @@ func (d *Decoder) Read(buf []byte) (int, error) {
 	n := copy(buf, d.buf)
 	d.buf = d.buf[n:]
 	d.pos += int64(n)
+	d.timePos += d.bytesToDuration(int64(n))
 	return n, nil
+}
+
+// bytesToDuration returns the duration corresponding to the number of bytes.
+func (d *Decoder) bytesToDuration(bytes int64) time.Duration {
+	return time.Duration(int64(bytes) * int64(time.Second) / int64(d.frame.BytesPerSecond()))
+}
+
+// durationToBytes returns the number of bytes corresponding to the duration.
+func (d *Decoder) durationToBytes(dur time.Duration) int64 {
+	return int64(dur * time.Duration(d.frame.BytesPerSecond()) / time.Second)
 }
 
 // At returns the current position, which can be used with Seek with whence = io.SeekOrigin.
@@ -76,25 +88,32 @@ func (d *Decoder) At() (ret int64) {
 	return d.pos
 }
 
-// Rewind rewinds by the specified number of seconds (or less if that would take us to the beginning of the mp3).
+// Rewind rewinds by the specified number of seconds (or less if that would take us to the beginning or end of the mp3).
+//
+// Note: This relies on the sample rate being constant across the entire mp3.
 func (d *Decoder) Rewind(seconds int) {
-	// TODO
+	d.Skip(-seconds)
 }
 
-// Skip skips forward by the specified number of seconds (or less if that would take us to the end of the mp3).
+// Skip skips forward by the specified number of seconds (or less if that would take us to the beginning or end of the mp3).
+//
+// Note: This relies on the sample rate being constant across the entire mp3.
 func (d *Decoder) Skip(seconds int) {
-	// TODO
+	d.Seek(d.durationToBytes(time.Second*time.Duration(seconds)), io.SeekCurrent)
 }
 
 // AtTime returns the current position in the mp3 in terms of time, which can be used with SeekTime.
+//
+// Note: This relies on the sample rate being constant across the entire mp3.
 func (d *Decoder) AtTime() (ret time.Duration) {
-	// TODO
-	return
+	return d.timePos
 }
 
 // SeekTime seeks to a specific time in the mp3.
+//
+// Note: This relies on the sample rate being constant across the entire mp3.
 func (d *Decoder) SeekTime(at time.Duration) {
-	// TODO
+	d.Seek(d.durationToBytes(time.Second*time.Duration(at)), io.SeekStart)
 }
 
 // Seek is io.Seeker's Seek.
@@ -105,11 +124,16 @@ func (d *Decoder) SeekTime(at time.Duration) {
 // channels, 2 bytes each). Be careful to seek to an offset that is divisible by
 // 4 if you want to read at full sample boundaries.
 func (d *Decoder) Seek(offset int64, whence int) (int64, error) {
+	if offset < 0 {
+		offset = 0
+	}
+	if offset > d.length {
+		offset = d.length
+	}
 	if offset == 0 && whence == io.SeekCurrent {
 		// Handle the special case of asking for the current position specially.
 		return d.pos, nil
 	}
-
 	npos := int64(0)
 	switch whence {
 	case io.SeekStart:
@@ -148,6 +172,7 @@ func (d *Decoder) Seek(offset int64, whence int) (int64, error) {
 		}
 		d.buf = d.buf[d.pos:]
 	}
+	d.timePos = d.bytesToDuration(npos)
 	return npos, nil
 }
 
